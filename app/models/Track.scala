@@ -33,6 +33,7 @@ object LastFm {
     Json.parse(r.body) \ "recenttracks" \ "track" match {
       case JsArray(elements) =>
         elements
+          .reverse
           .filter(x => (x \ "@attr" \ "nowplaying").isInstanceOf[JsUndefined])
           .map(x =>
           Track((x \ "artist" \ "#text").as[String], (x \ "name").as[String], (x \ "date" \ "uts").as[String].toLong)
@@ -69,10 +70,13 @@ object Track {
 
   def all(): Seq[TrackWithSpotify] = {
     val lastFmUsername: String = "morsch"
-    val from: Long = DateTime.parse("2010-05-01").getMillis/1000
-    val to: Long = DateTime.parse("2010-06-02").getMillis/1000
+    //    val from: Long = DateTime.parse("2010-05-01").getMillis/1000
+    //    val to: Long = DateTime.parse("2010-06-02").getMillis/1000
 
-    val fTracks: Future[Seq[Track]] = LastFm.tracksFromTo(lastFmUsername, from, to)
+    val from = DateTime.now().minusYears(1).minusHours(4)
+    val to = from.plusDays(1)
+
+    val fTracks: Future[Seq[Track]] = LastFm.tracksFromTo(lastFmUsername, from.getMillis/1000, to.getMillis/1000)
 
     val futureTracksWithSpotify: Future[Seq[TrackWithSpotify]] = fTracks.map { seq =>
       seq.map { track => Await.result(Spotify.addSpotifyid(track), Duration.Inf)}.flatten
