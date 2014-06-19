@@ -1,0 +1,30 @@
+@(tracks: Seq[TrackWithSpotify] /*, trackForm: Form[String]*/ )
+
+@import helper._
+
+@main("Todo list") {
+
+    <h1>@tracks.size track(s)</h1>
+
+    <ul>
+    @tracks.map { track =>
+        <li>
+        @track.artist - @track.name - @track.spotifyId - at @{new java.util.Date(track.date*1000).toString}
+        </li>
+    }
+    </ul>
+
+    <iframe src="https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:@tracks.map{track=>@track.spotifyId}.mkString(",")" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>
+
+
+@*    <h2>Add a new task</h2>
+
+    @form(routes.Application.newTask) {
+
+        @inputText(taskForm("label"))
+
+        <input type="submit" value="Create">
+
+    }*@
+
+}
