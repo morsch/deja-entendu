@@ -76,7 +76,11 @@ object Track {
     val from = DateTime.now().minusYears(1).minusHours(4)
     val to = from.plusDays(1)
 
-    val fTracks: Future[Seq[Track]] = LastFm.tracksFromTo(lastFmUsername, from.getMillis/1000, to.getMillis/1000)
+    getTracks(lastFmUsername, from, to)
+  }
+
+  def getTracks(user: String, from: DateTime, to: DateTime): Seq[TrackWithSpotify] = {
+    val fTracks: Future[Seq[Track]] = LastFm.tracksFromTo(user, from.getMillis / 1000, to.getMillis / 1000)
 
     val futureTracksWithSpotify: Future[Seq[TrackWithSpotify]] = fTracks.map { seq =>
       seq.map { track => Await.result(Spotify.addSpotifyid(track), Duration.Inf)}.flatten
