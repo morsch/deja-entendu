@@ -5,9 +5,9 @@
 # Home page
 GET        /                             controllers.Application.index
 
-GET        /tasks                        controllers.Application.tasks
+GET        /:user/at/:date               controllers.Application.at(user, date)
 
-GET /:user/at/:date controllers.Application.at(user, date)
+GET        /:user/:ago                   controllers.Application.ago(user, ago)
 
 GET        /tracks/:user/at/:date        controllers.Tracks.at(user, date)
 

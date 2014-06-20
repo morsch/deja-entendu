@@ -1,0 +1,13 @@
+.playtime {
+    width: 5em;
+    text-align: right;
+    display: inline-block;
+}
+
+.track {
+    margin:1px;
+}
+
+.player {
+    margin-top:20px;
+}

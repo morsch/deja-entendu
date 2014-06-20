@@ -1,0 +1,48 @@
+@(username: String, tracks: Seq[TrackWithSpotify] /*, trackForm: Form[String]*/ )
+@import java.text.SimpleDateFormat
+@import java.util.Date
+
+@import helper._
+
+@main(s"$username: deja entendu") {
+
+    <div class="container">
+
+        <div class="col-md-4">
+        </div>
+
+        <div class="col-md-8">
+            <p class="lead">Hey @username! One year ago, you listened to</p>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="col-md-4">
+            <iframe class="player" src="https://embed.spotify.com/?uri=spotify:trackset:Deja%20entendu:@tracks.map{track=>@track.spotifyId}.mkString(",")" width="300" height="700" frameborder="0" allowtransparency="true"></iframe>
+        </div>
+
+        <div class="col-md-8">
+
+        @tracks.map { track =>
+            <p class="track">
+                <span class="playtime"><b>@{new SimpleDateFormat("h:mm a").format(new Date(track.date*1000)).toLowerCase()}</b></span> @track.artist - @track.name
+            </p>
+        }
+        </div>
+    </div>
+
+
+
+
+    @*    <h2>Add a new task</h2>
+
+    @form(routes.Application.newTask) {
+
+    @inputText(taskForm("label"))
+
+    <input type="submit" value="Create">
+
+    }*@
+
+}
