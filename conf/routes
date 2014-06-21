@@ -3,15 +3,16 @@
 # ~~~~
 
 # Home page
-GET        /                             controllers.Application.index
+GET         /                             controllers.Application.index
+POST        /                             controllers.Application.setUser
 
-GET        /:user/at/:date               controllers.Application.at(user, date)
+GET         /:user                        controllers.Application.agoDefault(user)
+GET         /:user/:ago                   controllers.Application.ago(user, ago)
 
-GET        /:user/:ago                   controllers.Application.ago(user, ago)
-
-GET        /tracks/:user/at/:date        controllers.Tracks.at(user, date)
+GET         /:user/at/:date               controllers.Application.at(user, date)
+GET         /tracks/:user/at/:date        controllers.Tracks.at(user, date)
 
 # Map static resources from the /public folder to the /assets URL path
-GET        /assets/*file                 controllers.Assets.at(path="/public", file)
+GET         /assets/*file                 controllers.Assets.at(path="/public", file)
 
     

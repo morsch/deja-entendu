@@ -7,8 +7,11 @@
         <title>@title</title>
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-        <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
+
+        <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+
             <!-- Latest compiled and minified CSS -->
+
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 
             <!-- Optional theme -->
@@ -23,13 +26,28 @@
 
             <div class="col-md-4"></div>
             <div class="col-md-8">
-                <div class="page-header"><h1>deja entendu <small>I've heard that before</small></h1>
+                <div class="page-header"><h1> deja entendu
+                     <small> You've heard that before</small></h1>
                 </div>
             </div>
 
         </div>
 
         @content
+
+        <div class="container">
+
+            <div class="col-md-12 text-center">
+@*                <div class="page-header"><h1> deja entendu
+                    <small> You've heard that before</small></h1>
+                </div>*@
+
+
+                <div class="footer">Data pulled from <a href="http://www.last.fm/"><img src="http://cdn.last.fm/flatness/badges/lastfm_black_small.gif"/></a>
+                    Player courtesy of <a href="http://www.spotify.com/"><img src="@routes.Assets.at("images/spotify-logo.png")"/></a></div>
+            </div>
+
+        </div>
 
     </body>
 </html>

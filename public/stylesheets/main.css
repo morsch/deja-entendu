@@ -11,3 +11,16 @@
 .player {
     margin-top:20px;
 }
+
+.footer {
+    margin:20px;
+}
+
+.inlined-box {
+    display: inline-block;
+}
+
+.white-button {
+    background-image: none !important;
+    background-image: none !important;
+}

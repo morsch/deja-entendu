@@ -1,4 +1,4 @@
-@(username: String, tracks: Seq[TrackWithSpotify] /*, trackForm: Form[String]*/ )
+@(username: String, tracks: Seq[TrackWithSpotify], availableTimespans: Seq[(String,String,Boolean)] = ("1y-ago", "One year", true) :: Nil /*, trackForm: Form[String]*/ )
 @import java.text.SimpleDateFormat
 @import java.util.Date
 
@@ -12,23 +12,44 @@
         </div>
 
         <div class="col-md-8">
-            <p class="lead">Hey @username! One year ago, you listened to</p>
+            Hey @username!
+
+                <div class="dropdown inlined-box">
+                    <button type="button" class="btn btn-default dropdown-toggle white-button" data-toggle="dropdown">
+                        @{availableTimespans.filter{ value => value._3 }.map { link =>
+                            link._2
+                        }} <b class="caret"></b>
+                    </button>
+
+                    <ul class="dropdown-menu">
+                        @availableTimespans.map { link =>
+                        <li><a href="/@username/@link._1">@link._2</a></li>
+                        }
+@*                        <li><a href="/@username/3y-ago">Three years</a></li>
+                        <li><a href="/@username/1y-ago">One year</a></li>
+                        <li><a href="/@username/6m-ago">Six months</a></li>
+                        <li><a href="/@username/3w-ago">Three weeks</a></li>*@
+                    </ul>
+                </div>
+            ago, you listened to
         </div>
     </div>
 
 
     <div class="container">
         <div class="col-md-4">
-            <iframe class="player" src="https://embed.spotify.com/?uri=spotify:trackset:Deja%20entendu:@tracks.map{track=>@track.spotifyId}.mkString(",")" width="300" height="700" frameborder="0" allowtransparency="true"></iframe>
+            <iframe class="player" src="https://embed.spotify.com/?uri=spotify:trackset:Deja%20entendu:@tracks.map{track=>@track.spotifyId}.mkString(",")" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>
         </div>
 
         <div class="col-md-8">
 
         @tracks.map { track =>
             <p class="track">
-                <span class="playtime"><b>@{new SimpleDateFormat("h:mm a").format(new Date(track.date*1000)).toLowerCase()}</b></span> @track.artist - @track.name
+                <span class="playtime"><b>@{new SimpleDateFormat("h:mm a").format(new Date(track.date*1000)).toLowerCase()}</b></span>
+                <a href="spotify:track:@track.spotifyId">@track.artist - @track.name</a>
             </p>
         }
+
         </div>
     </div>
 

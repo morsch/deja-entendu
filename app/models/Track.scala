@@ -15,6 +15,8 @@ case class Track(artist: String, name: String, date:Long)
 case class TrackWithSpotify(artist: String, name: String, date: Long, spotifyId: String)
 
 object Track {
+  val limit: Int = 30
+
   def getTracks(user: String, from: DateTime, to: DateTime): Seq[TrackWithSpotify] = {
     val fTracks: Future[Seq[Track]] = LastFm.tracksFromTo(user, from.getMillis / 1000, to.getMillis / 1000)
 
@@ -24,7 +26,7 @@ object Track {
     }
 
     val futureTracksWithSpotify: Future[Seq[TrackWithSpotify]] = fTracks.map { seq =>
-      seq.map { track => Await.result(Spotify.addSpotifyid(track), Duration.Inf)}.flatten
+      seq.slice(0, limit).map { track => Await.result(Spotify.addSpotifyid(track), Duration.Inf)}.flatten
     }
 
     Await.result(futureTracksWithSpotify, Duration.Inf)

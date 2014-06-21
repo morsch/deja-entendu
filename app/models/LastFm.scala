@@ -1,5 +1,6 @@
 package models
 
+import org.joda.time.{Instant, DateTime}
 import play.Play
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json._
@@ -15,7 +16,7 @@ object LastFm {
   final val lastFmWsUrl: String = "http://ws.audioscrobbler.com/2.0/"
   final val lastFmApiKey: String = Play.application().configuration().getString("lastFmApiKey")
 
-  def tracksFromToResponse(user : String, from : Long, to : Long) : Future[Response] = {
+  def tracksFromToCall(user : String, from : Long, to : Long) : Future[Response] = {
     WS.url(lastFmWsUrl)
       .withQueryString(("method", "user.getrecenttracks"), ("user", user), ("api_key", lastFmApiKey), ("from", from.toString), ("to", to.toString), ("limit", "100"), ("format", "json")).get()
   }
@@ -34,8 +35,22 @@ object LastFm {
     }
   }
 
+
+  def userRegisteredCall(user: String) : Future[Response] = {
+    WS.url(lastFmWsUrl)
+      .withQueryString(("method", "user.getinfo"), ("user", user), ("api_key", lastFmApiKey), ("format", "json")).get()
+  }
+
+  def userRegisteredParse(r: Response) : DateTime = {
+    new DateTime((Json.parse(r.body) \ "user" \ "registered" \ "unixtime").as[String].toLong)
+  }
+
+  def userRegistered(user: String) : Future[DateTime] = {
+    userRegisteredCall(user).map(userRegisteredParse)
+  }
+
   def tracksFromTo(user : String, from : Long, to : Long) : Future[Seq[Track]] = {
-    tracksFromToResponse(user, from, to)
+    tracksFromToCall(user, from, to)
     .andThen {
       // case Success(x) => println(x.body)
       case Failure(x) => println(x)

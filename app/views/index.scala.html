@@ -1,0 +1,32 @@
+@(userForm: Form[String])
+@import java.text.SimpleDateFormat
+@import java.util.Date
+
+@import helper._
+
+@main("deja entendu") {
+
+    <div class="container">
+
+        <div class="col-md-4">
+        </div>
+
+        <div class="col-md-8">
+        @form(routes.Application.setUser) {
+
+            @inputText(userForm("username"))
+
+            <input type="submit" value="">
+
+            }
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+}
