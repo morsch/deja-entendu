@@ -22,7 +22,7 @@ object LastFm {
   }
 
   def responseToTracks(r : Response) : Seq[Track] = {
-    Json.parse(r.body) \ "recenttracks" \ "track" match {
+    r.json \ "recenttracks" \ "track" match {
       case JsArray(elements) =>
         elements
           .reverse
@@ -42,15 +42,15 @@ object LastFm {
   }
 
   def userRegisteredParse(r: Response) : DateTime = {
-    new DateTime((Json.parse(r.body) \ "user" \ "registered" \ "unixtime").as[String].toLong)
+    new DateTime((r.json \ "user" \ "registered" \ "unixtime").as[String].toLong)
   }
 
   def userRegistered(user: String) : Future[DateTime] = {
     userRegisteredCall(user).map(userRegisteredParse)
   }
 
-  def tracksFromTo(user : String, from : Long, to : Long) : Future[Seq[Track]] = {
-    tracksFromToCall(user, from, to)
+  def tracksFromTo(user : String, from : DateTime, to : DateTime) : Future[Seq[Track]] = {
+    tracksFromToCall(user, from.getMillis/1000, to.getMillis/1000)
     .andThen {
       // case Success(x) => println(x.body)
       case Failure(x) => println(x)

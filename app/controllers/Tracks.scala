@@ -6,6 +6,9 @@ import play.api.http.Writeable
 import play.api.libs.json.{JsArray, JsObject, Json, Writes}
 import play.api.mvc.{Action, Results, Controller}
 
+import scala.concurrent.{Await, Future}
+import scala.concurrent.duration.Duration
+
 /**
  * Created by moritz on 20.06.14.
  */
@@ -15,8 +18,8 @@ object Tracks extends Controller {
     try {
       val d = DateTime.parse(date)
 
-      val map = Track.getTracks(user, d, d.plusDays(1))
-        .map { toJson }
+      val tracks: Future[Seq[TrackWithSpotify]] = Track.getTracks(user, d, d.plusDays(1))
+      val map = Await.result(tracks, Duration.Inf).map { toJson }
 
       Ok(Json.obj(("result", JsArray.apply(map))))
 

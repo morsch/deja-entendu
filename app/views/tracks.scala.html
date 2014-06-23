@@ -1,4 +1,4 @@
-@(username: String, tracks: Seq[TrackWithSpotify], availableTimespans: Seq[(String,String,Boolean)] = ("1y-ago", "One year", true) :: Nil /*, trackForm: Form[String]*/ )
+@(username: String, tracks: Seq[TrackWithSpotify], availableTimespans: Seq[(String,String,Boolean)])
 @import java.text.SimpleDateFormat
 @import java.util.Date
 
@@ -38,7 +38,7 @@
 
     <div class="container">
         <div class="col-md-4">
-            <iframe class="player" src="https://embed.spotify.com/?uri=spotify:trackset:Deja%20entendu:@tracks.map{track=>@track.spotifyId}.mkString(",")" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>
+            <iframe class="player" src="https://embed.spotify.com/?uri=spotify:trackset:Deja%20entendu:@{tracks.map{track=>track.spotifyId}.flatten.mkString(",")}" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>
         </div>
 
         <div class="col-md-8">
@@ -46,7 +46,15 @@
         @tracks.map { track =>
             <p class="track">
                 <span class="playtime"><b>@{new SimpleDateFormat("h:mm a").format(new Date(track.date*1000)).toLowerCase()}</b></span>
-                <a href="spotify:track:@track.spotifyId">@track.artist - @track.name</a>
+            @track.spotifyId match {
+                case Some(spotifyId) => {
+                    <a href="spotify:track:@spotifyId" class="spotifyLink">@track.artist - @track.name</a>
+                }
+                case None => {
+                    <span class="nospotifyLink">@track.artist - @track.name</span>
+                }
+
+            }
             </p>
         }
 

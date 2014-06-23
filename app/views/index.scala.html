@@ -12,13 +12,28 @@
         </div>
 
         <div class="col-md-8">
-        @form(routes.Application.setUser) {
+            <p>&nbsp;</p>
+            <p class="text-justify">Take a journey back to the musical taste of your past. We'll show you the songs you played on specific dates by pulling the data from your last.fm
+            profile -- or anyone else's, for that matter. If you've got Spotify, a convenient player is available to relive the moment right here. Or you can
+            click on the song, which should open it in Spotify.</p>
 
-            @inputText(userForm("username"))
+            <p>&nbsp;</p>
 
-            <input type="submit" value="">
+            <form class="text-center form-inline" role="form" action="/">
+                <div class="form-group">
+                    <label class="sr-only" for="username">Last.fm username</label>
+                    <input type="text" name="username" class="form-control" id="username" placeholder="Enter a last.fm username">
+                </div>
+                <button type="submit" class="btn btn-default">Take me back</button>
+            </form>
 
-            }
+            <p>&nbsp;</p>
+            <hr/>
+            <p>&nbsp;</p>
+
+            <p><small>Obviously this only works if you've been diligent about submitting your played tracks to last.fm! Feel free to look at
+                <a href="/morsch">my last.fm account</a> if you just want to test it. The web player does not seem to work on mobile
+            (but the links do!). No responsibility is assumed for any emotional harm caused by bad past musical taste.</small></p>
         </div>
     </div>
 

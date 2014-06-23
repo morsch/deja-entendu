@@ -12,13 +12,13 @@ import scala.util.{Failure, Success}
  */
 case class Track(artist: String, name: String, date:Long)
 
-case class TrackWithSpotify(artist: String, name: String, date: Long, spotifyId: String)
+case class TrackWithSpotify(artist: String, name: String, date: Long, spotifyId: Option[String])
 
 object Track {
   val limit: Int = 30
 
-  def getTracks(user: String, from: DateTime, to: DateTime): Seq[TrackWithSpotify] = {
-    val fTracks: Future[Seq[Track]] = LastFm.tracksFromTo(user, from.getMillis / 1000, to.getMillis / 1000)
+  def getTracks(user: String, from: DateTime, to: DateTime): Future[Seq[TrackWithSpotify]] = {
+    val fTracks: Future[Seq[Track]] = LastFm.tracksFromTo(user, from, to)
 
     fTracks andThen {
       case Success(tracks) =>  println(s"lastfm($user, $from, $to) returned ${tracks.size} tracks")
@@ -26,9 +26,13 @@ object Track {
     }
 
     val futureTracksWithSpotify: Future[Seq[TrackWithSpotify]] = fTracks.map { seq =>
-      seq.slice(0, limit).map { track => Await.result(Spotify.addSpotifyid(track), Duration.Inf)}.flatten
+      val someTracks: Seq[Track] = seq.slice(0, limit)
+
+      //someTracks.map { track => Await.result(Spotify.addSpotifyid(track), Duration.Inf)}
+      someTracks.map { track => Spotify.addSpotifyid(track)}.map( f => Await.result(f, Duration.Inf))
+
     }
 
-    Await.result(futureTracksWithSpotify, Duration.Inf)
+    futureTracksWithSpotify
   }
 }
