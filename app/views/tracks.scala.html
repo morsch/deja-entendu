@@ -6,6 +6,16 @@
 
 @main(s"$username: deja entendu") {
 
+    <script>
+    $(function() {
+    $ ( ".playtime-data" ).each ( function ( index, element ) {
+        var date = new Date(+element.getAttribute("data-timestamp") * 1000);
+        var options = {hour: "numeric", minute: "numeric"};
+        element.innerText =  new Intl.DateTimeFormat(undefined, options).format(date).toLowerCase();
+    } )
+    })
+    </script>
+
     <div class="container">
 
         <div class="col-md-4">
@@ -25,10 +35,6 @@
                         @availableTimespans.map { link =>
                         <li><a href="/@username/@link._1">@link._2</a></li>
                         }
-@*                        <li><a href="/@username/3y-ago">Three years</a></li>
-                        <li><a href="/@username/1y-ago">One year</a></li>
-                        <li><a href="/@username/6m-ago">Six months</a></li>
-                        <li><a href="/@username/3w-ago">Three weeks</a></li>*@
                     </ul>
                 </div>
             ago, you listened to
@@ -45,7 +51,7 @@
 
         @tracks.map { track =>
             <p class="track">
-                <span class="playtime"><b>@{new SimpleDateFormat("h:mm a").format(new Date(track.date*1000)).toLowerCase()}</b></span>
+                <b><span data-timestamp="@track.date" class="playtime playtime-data" /></b>
             @track.spotifyId match {
                 case Some(spotifyId) => {
                     <a href="spotify:track:@spotifyId" class="spotifyLink">@track.artist - @track.name</a>
