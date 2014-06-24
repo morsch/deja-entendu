@@ -48,21 +48,28 @@
         </div>
 
         <div class="col-md-8">
-
-        @tracks.map { track =>
-            <p class="track">
-                <b><span data-timestamp="@track.date" class="playtime playtime-data" /></b>
-            @track.spotifyId match {
-                case Some(spotifyId) => {
-                    <a href="spotify:track:@spotifyId" class="spotifyLink">@track.artist - @track.name</a>
-                }
-                case None => {
-                    <span class="nospotifyLink">@track.artist - @track.name</span>
-                }
-
-            }
-            </p>
+        @if(tracks.isEmpty) {
+            <p>&nbsp;</p>
+            <p>Nothing, apparently. Try selecting one of the available dates above.</p>
         }
+
+        @if(tracks.nonEmpty) {
+            @tracks.map { track =>
+                <p class="track">
+                    <b><span data-timestamp="@track.date" class="playtime playtime-data" /></b>
+                    @track.spotifyId match {
+                        case Some(spotifyId) => {
+                            <a href="spotify:track:@spotifyId" class="spotifyLink">@track.artist - @track.name</a>
+                        }
+                        case None => {
+                            <span class="nospotifyLink">@track.artist - @track.name</span>
+                        }
+
+                    }
+                </p>
+            }
+        }
+
 
         </div>
     </div>

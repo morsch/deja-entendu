@@ -25,3 +25,13 @@
     background-image: none !important;
 }
 
+.border {
+    border:1px solid black;
+}
+
+.plain-link {
+    color: black;
+}
+.plain-link:hover {
+    text-decoration: none;
+}

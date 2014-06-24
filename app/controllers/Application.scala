@@ -64,16 +64,19 @@ object Application extends Controller {
     }
   }
 
-  val defaultTimespans: Seq[(String,String)] = List(("5y-ago", "Five years"), ("3y-ago", "Three years"), ("1y-ago", "One year"), ("6m-ago", "Six months"), ("1m-ago", "One month"), ("10w-ago", "Ten weeks"), ("7d-ago", "Seven days") )
+  val defaultTimespans: Seq[(String,String)] =
+    List(("5y-ago", "Five years"), ("3y-ago", "Three years"), ("2y-ago", "Two years"), ("1y-ago", "One year"),
+      ("9m-ago", "Nine months"), ("6m-ago", "Six months"), ("3m-ago", "Three months"), ("1m-ago", "One month"), ("10w-ago", "Ten weeks"),
+      ("1000d-ago", "One <i>thousand</i> days"), ("7d-ago", "Seven days") )
 
   def agoDefault(user: String) =  ago(user, "1y-ago")
 
   def getTracksSpotify(user: String, d: DateTime): Future[Seq[TrackWithSpotify]] = {
-    Track.getTracks(user, d.minusMinutes(10), d.plusHours(12))
+    Track.getTracks(user, d.minusMinutes(20), d.plusHours(8))
   }
 
   def getTracksLastfm(user: String, d: DateTime): Future[Seq[Track]] = {
-    LastFm.tracksFromTo(user, d.minusMinutes(10), d.plusHours(12))
+    LastFm.tracksFromTo(user, d.minusMinutes(10), d.plusHours(8))
   }
 
   def ago(user: String, ago: String) = Action.async {
@@ -90,7 +93,7 @@ object Application extends Controller {
 
         val futureSpans: Future[Seq[(String, String, Boolean)]] = Future.traverse(defaultTimespans) { span =>
           val dt = parseAgo(span._1).get
-          tracksAvailable(dt).map(b => addSelectionInfo(span) -> b)
+          tracksAvailable(dt).map(b => addSelectionInfo(span) -> (b || span._1.equals(ago)) )
 
         }.map(_.collect { case (sms, true) => sms})
 
